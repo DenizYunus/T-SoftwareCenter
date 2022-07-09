@@ -40,16 +40,10 @@
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.TopPickPanel = new System.Windows.Forms.Panel();
             this.AppsPanel = new System.Windows.Forms.Panel();
-            this.itemContainer = new System.Windows.Forms.GroupBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.pictureBox3 = new System.Windows.Forms.PictureBox();
             this.GamesPanel = new System.Windows.Forms.Panel();
             this.LeftPanel.SuspendLayout();
             this.HeaderPanel.SuspendLayout();
             this.panel1.SuspendLayout();
-            this.AppsPanel.SuspendLayout();
-            this.itemContainer.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             this.SuspendLayout();
             // 
             // LeftPanel
@@ -182,46 +176,12 @@
             // 
             // AppsPanel
             // 
-            this.AppsPanel.Controls.Add(this.itemContainer);
+            this.AppsPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(43)))), ((int)(((byte)(79)))), ((int)(((byte)(200)))));
             this.AppsPanel.Dock = System.Windows.Forms.DockStyle.Top;
             this.AppsPanel.Location = new System.Drawing.Point(230, 293);
             this.AppsPanel.Name = "AppsPanel";
             this.AppsPanel.Size = new System.Drawing.Size(624, 300);
             this.AppsPanel.TabIndex = 3;
-            // 
-            // itemContainer
-            // 
-            this.itemContainer.Controls.Add(this.label3);
-            this.itemContainer.Controls.Add(this.pictureBox3);
-            this.itemContainer.Location = new System.Drawing.Point(1, -8);
-            this.itemContainer.Name = "itemContainer";
-            this.itemContainer.Padding = new System.Windows.Forms.Padding(20, 0, 20, 10);
-            this.itemContainer.Size = new System.Drawing.Size(150, 150);
-            this.itemContainer.TabIndex = 3;
-            this.itemContainer.TabStop = false;
-            // 
-            // label3
-            // 
-            this.label3.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.label3.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.label3.ForeColor = System.Drawing.Color.White;
-            this.label3.Location = new System.Drawing.Point(20, 113);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(110, 27);
-            this.label3.TabIndex = 2;
-            this.label3.Text = "WhatsApp";
-            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // pictureBox3
-            // 
-            this.pictureBox3.BackgroundImage = global::CustomStore.Properties.Resources.WhatsApp1;
-            this.pictureBox3.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.pictureBox3.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pictureBox3.Location = new System.Drawing.Point(20, 16);
-            this.pictureBox3.Name = "pictureBox3";
-            this.pictureBox3.Size = new System.Drawing.Size(110, 90);
-            this.pictureBox3.TabIndex = 1;
-            this.pictureBox3.TabStop = false;
             // 
             // GamesPanel
             // 
@@ -251,9 +211,6 @@
             this.HeaderPanel.ResumeLayout(false);
             this.HeaderPanel.PerformLayout();
             this.panel1.ResumeLayout(false);
-            this.AppsPanel.ResumeLayout(false);
-            this.itemContainer.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -273,8 +230,5 @@
         private Button CloseButton;
         private ProgressBar downloadingProgressBar;
         private Panel panel1;
-        private GroupBox itemContainer;
-        private Label label3;
-        private PictureBox pictureBox3;
     }
 }

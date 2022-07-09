@@ -10,6 +10,7 @@ namespace CustomStore
     {
         public string downloadingFileName = "";
         public string itemSilenceCommand = null!;
+        Label installationStatusLabel = null!;
 
         public Form1()
         {
@@ -25,13 +26,25 @@ namespace CustomStore
                 string s = client.GetStringAsync("http://127.0.0.1/SoftwareCenter/softwareList.json").Result;
                 JSONClassParser? myDeserializedClass = JsonConvert.DeserializeObject<JSONClassParser>(s);
 
-                foreach(Software item in myDeserializedClass.Softwares)
+                foreach (Software item in myDeserializedClass.Softwares)
                 {
-                    Panel panel = new Panel();
-                    panel.Size = new Size(150, 150);
-                    panel.Padding = new Padding(20, 20, 20, 20);
-                    panel.Location = new Point(xPos, yPos);
-                    panel.MouseClick += ((e, d) => { StartDownload(item.FileURL, item.SilentCommand); });
+                    Label installationStatusLabel = new Label()
+                    {
+                        Text = "Not Installed",
+                        Font = new Font("Segoe UI", 9),
+                        ForeColor = Color.White,
+                        Dock = DockStyle.Bottom,
+                        AutoSize = false,
+                        TextAlign = ContentAlignment.MiddleCenter
+                    };
+
+                    Panel panel = new Panel()
+                    {
+                        Size = new Size(150, 150),
+                        Padding = new Padding(20, 20, 20, 20),
+                        Location = new Point(xPos, yPos)
+                    };
+                    panel.MouseClick += ((e, d) => { StartDownload(item.FileURL, item.SilentCommand, installationStatusLabel); });
                     AppsPanel.Controls.Add(panel);
 
                     xPos += 150;
@@ -39,7 +52,7 @@ namespace CustomStore
 
                     PictureBox pictureBox = new PictureBox();
                     pictureBox.Dock = DockStyle.Top;
-                    pictureBox.Size = new Size(140, 80);
+                    pictureBox.Size = new Size(60, 60);
 
                     var request = WebRequest.Create(item.IconURL);
                     using (var response = request.GetResponse())
@@ -47,17 +60,22 @@ namespace CustomStore
                     {
                         pictureBox.BackgroundImage = Bitmap.FromStream(stream);
                     }
-                    pictureBox.BackgroundImageLayout = ImageLayout.Stretch;
-                    pictureBox.MouseClick += ((e, d) => { StartDownload(item.FileURL, item.SilentCommand); });
+                    pictureBox.BackgroundImageLayout = ImageLayout.Zoom;
+                    pictureBox.MouseClick += ((e, d) => { StartDownload(item.FileURL, item.SilentCommand, installationStatusLabel); });
                     panel.Controls.Add(pictureBox);
 
-                    Label label = new Label();
-                    label.Text = item.Name;
-                    label.Dock = DockStyle.Bottom;
-                    label.ForeColor = Color.White;
-                    label.Font = new Font("Segoe UI", 12);
-                    label.MouseClick += ((e, d) => { StartDownload(item.FileURL, item.SilentCommand); });
-                    panel.Controls.Add(label);
+                    Label appName = new Label()
+                    {
+                        Text = item.Name,
+                        Dock = DockStyle.Bottom,
+                        ForeColor = Color.White,
+                        Font = new Font("Segoe UI", 12),
+                        AutoSize = false,
+                        TextAlign = ContentAlignment.MiddleCenter
+                    };
+                    MouseClick += ((e, d) => { StartDownload(item.FileURL, item.SilentCommand, installationStatusLabel); });
+                    panel.Controls.Add(appName);
+                    panel.Controls.Add(installationStatusLabel);
 
                     panel.Refresh();
                 }
@@ -69,9 +87,10 @@ namespace CustomStore
             Application.Exit();
         }
         
-        private void StartDownload(string _url, string _silentCommand)
+        private void StartDownload(string _url, string _silentCommand, Label _installationstatusLabel)
         {
             itemSilenceCommand = _silentCommand;
+            installationStatusLabel = _installationstatusLabel;
             Thread thread = new(() => {
                 WebClient client = new();
                 client.DownloadProgressChanged += new DownloadProgressChangedEventHandler(Client_DownloadProgressChanged);
@@ -106,6 +125,7 @@ namespace CustomStore
                 };
                 process.StartInfo = startInfo;
                 process.Start();
+                installationStatusLabel.Text = "Installed";
             });
         }
     }

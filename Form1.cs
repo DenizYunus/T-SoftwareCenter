@@ -98,12 +98,12 @@ namespace CustomStore
                 ProcessStartInfo startInfo = new()
                 {
                     WindowStyle = ProcessWindowStyle.Hidden,
-                    FileName = "cmd.exe",
-                    Arguments = Environment.CurrentDirectory + "\\temp.exe " + itemSilenceCommand,
+                    FileName = Environment.CurrentDirectory + @"\temp.exe",
+                    Arguments = itemSilenceCommand,
                     Verb = "runas",
-                    UseShellExecute = true
+                    UseShellExecute = false,
+                    CreateNoWindow = true
                 };
-                MessageBox.Show(Environment.CurrentDirectory + "\\temp.exe " + itemSilenceCommand);
                 process.StartInfo = startInfo;
                 process.Start();
             });

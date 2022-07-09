@@ -14,12 +14,7 @@ namespace CustomStore
 
         private void Form1_Load(object sender, EventArgs e)
         {
-
-        }
-
-        private void roundedButton1_Click(object sender, EventArgs e)
-        {
-
+            // JSONClassParser myDeserializedClass = JsonConvert.DeserializeObject<JSONClassParser>(myJsonResponse);
         }
 
         private void WhatsAppPanel_MouseClick(object sender, MouseEventArgs e)
@@ -42,8 +37,8 @@ namespace CustomStore
         
         private void StartDownload(string _url)
         {
-            Thread thread = new Thread(() => {
-                WebClient client = new WebClient();
+            Thread thread = new(() => {
+                WebClient client = new();
                 client.DownloadProgressChanged += new DownloadProgressChangedEventHandler(Client_DownloadProgressChanged);
                 client.DownloadFileCompleted += new AsyncCompletedEventHandler(Client_DownloadFileCompleted);
                 client.DownloadFileAsync(new Uri(_url), Environment.CurrentDirectory + "\\" + downloadingFileName);
@@ -61,15 +56,17 @@ namespace CustomStore
                 downloadingProgressBar.Value = int.Parse(Math.Truncate(percentage).ToString());
             });
         }
-        void Client_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
+        void Client_DownloadFileCompleted(object? sender, AsyncCompletedEventArgs e)
         {
             this.BeginInvoke((MethodInvoker)delegate {
-                System.Diagnostics.Process process = new System.Diagnostics.Process();
-                System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
-                startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
-                startInfo.FileName = "cmd.exe";
-                startInfo.Arguments = Environment.CurrentDirectory + "\\" + downloadingFileName + (downloadingFileName == "WhatsApp.exe" ? " --silent" : " /S");
-                startInfo.Verb = "runas";
+                System.Diagnostics.Process process = new();
+                System.Diagnostics.ProcessStartInfo startInfo = new()
+                {
+                    WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden,
+                    FileName = "cmd.exe",
+                    Arguments = Environment.CurrentDirectory + "\\" + downloadingFileName + (downloadingFileName == "WhatsApp.exe" ? " --silent" : " /S"),
+                    Verb = "runas"
+                };
                 process.StartInfo = startInfo;
                 process.Start();
             });

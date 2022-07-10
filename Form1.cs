@@ -21,64 +21,62 @@ namespace CustomStore
         {
             int xPos = 0;
             int yPos = 0;
-            using (HttpClient client = new HttpClient())
+            using HttpClient client = new();
+            string s = client.GetStringAsync("http://127.0.0.1/SoftwareCenter/softwareList.json").Result;
+            JSONClassParser? myDeserializedClass = JsonConvert.DeserializeObject<JSONClassParser>(s);
+
+            foreach (Software item in myDeserializedClass.Softwares)
             {
-                string s = client.GetStringAsync("http://127.0.0.1/SoftwareCenter/softwareList.json").Result;
-                JSONClassParser? myDeserializedClass = JsonConvert.DeserializeObject<JSONClassParser>(s);
-
-                foreach (Software item in myDeserializedClass.Softwares)
+                Label installationStatusLabel = new()
                 {
-                    Label installationStatusLabel = new Label()
-                    {
-                        Text = "Not Installed",
-                        Font = new Font("Segoe UI", 9),
-                        ForeColor = Color.White,
-                        Dock = DockStyle.Bottom,
-                        AutoSize = false,
-                        TextAlign = ContentAlignment.MiddleCenter
-                    };
+                    Text = CheckSoftwareIsInstalled.CheckIfSoftwareIsInstalled(item.Name) ? "Installed" : "Not Installed",
+                    Font = new Font("Segoe UI", 9),
+                    ForeColor = Color.White,
+                    Dock = DockStyle.Bottom,
+                    AutoSize = false,
+                    TextAlign = ContentAlignment.MiddleCenter
+                };
 
-                    Panel panel = new Panel()
-                    {
-                        Size = new Size(150, 150),
-                        Padding = new Padding(20, 20, 20, 20),
-                        Location = new Point(xPos, yPos)
-                    };
-                    panel.MouseClick += ((e, d) => { StartDownload(item.FileURL, item.SilentCommand, installationStatusLabel); });
-                    AppsPanel.Controls.Add(panel);
+                Panel panel = new()
+                {
+                    Size = new Size(150, 150),
+                    Padding = new Padding(20, 20, 20, 20),
+                    Location = new Point(xPos, yPos)
+                };
+                panel.MouseClick += ((e, d) => { StartDownload(item.FileURL, item.SilentCommand, installationStatusLabel); });
+                AppsPanel.Controls.Add(panel);
 
-                    xPos += 150;
-                    //yPos += 150;
+                xPos += 150;
+                //yPos += 150;
 
-                    PictureBox pictureBox = new PictureBox();
-                    pictureBox.Dock = DockStyle.Top;
-                    pictureBox.Size = new Size(60, 60);
+                PictureBox pictureBox = new();
+                pictureBox.Dock = DockStyle.Top;
+                pictureBox.Size = new Size(60, 60);
 
-                    var request = WebRequest.Create(item.IconURL);
-                    using (var response = request.GetResponse())
-                    using (var stream = response.GetResponseStream())
-                    {
-                        pictureBox.BackgroundImage = Bitmap.FromStream(stream);
-                    }
-                    pictureBox.BackgroundImageLayout = ImageLayout.Zoom;
-                    pictureBox.MouseClick += ((e, d) => { StartDownload(item.FileURL, item.SilentCommand, installationStatusLabel); });
-                    panel.Controls.Add(pictureBox);
-
-                    Label appName = new Label()
-                    {
-                        Text = item.Name,
-                        Dock = DockStyle.Bottom,
-                        ForeColor = Color.White,
-                        Font = new Font("Segoe UI", 12),
-                        AutoSize = false,
-                        TextAlign = ContentAlignment.MiddleCenter
-                    };
-                    MouseClick += ((e, d) => { StartDownload(item.FileURL, item.SilentCommand, installationStatusLabel); });
-                    panel.Controls.Add(appName);
-                    panel.Controls.Add(installationStatusLabel);
-
-                    panel.Refresh();
+                var request = WebRequest.Create(item.IconURL);
+                using (var response = request.GetResponse())
+                using (var stream = response.GetResponseStream())
+                {
+                    pictureBox.BackgroundImage = Bitmap.FromStream(stream);
                 }
+                pictureBox.BackgroundImageLayout = ImageLayout.Zoom;
+                pictureBox.MouseClick += ((e, d) => { StartDownload(item.FileURL, item.SilentCommand, installationStatusLabel); });
+                panel.Controls.Add(pictureBox);
+
+                Label appName = new()
+                {
+                    Text = item.Name,
+                    Dock = DockStyle.Bottom,
+                    ForeColor = Color.White,
+                    Font = new Font("Segoe UI", 12),
+                    AutoSize = false,
+                    TextAlign = ContentAlignment.MiddleCenter
+                };
+                MouseClick += ((e, d) => { StartDownload(item.FileURL, item.SilentCommand, installationStatusLabel); });
+                panel.Controls.Add(appName);
+                panel.Controls.Add(installationStatusLabel);
+
+                panel.Refresh();
             }
         }
 
@@ -87,7 +85,7 @@ namespace CustomStore
             Application.Exit();
         }
         
-        private void StartDownload(string _url, string _silentCommand, Label _installationstatusLabel)
+        private void StartDownload(string? _url, string? _silentCommand, Label? _installationstatusLabel)
         {
             itemSilenceCommand = _silentCommand;
             installationStatusLabel = _installationstatusLabel;

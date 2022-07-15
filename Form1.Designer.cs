@@ -40,7 +40,7 @@
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.TopPickPanel = new System.Windows.Forms.Panel();
             this.AppsPanel = new System.Windows.Forms.Panel();
-            this.GamesPanel = new System.Windows.Forms.Panel();
+            this.PacksPanel = new System.Windows.Forms.Panel();
             this.LeftPanel.SuspendLayout();
             this.HeaderPanel.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -183,13 +183,13 @@
             this.AppsPanel.Size = new System.Drawing.Size(624, 300);
             this.AppsPanel.TabIndex = 3;
             // 
-            // GamesPanel
+            // PacksPanel
             // 
-            this.GamesPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.GamesPanel.Location = new System.Drawing.Point(230, 593);
-            this.GamesPanel.Name = "GamesPanel";
-            this.GamesPanel.Size = new System.Drawing.Size(624, 248);
-            this.GamesPanel.TabIndex = 4;
+            this.PacksPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.PacksPanel.Location = new System.Drawing.Point(230, 593);
+            this.PacksPanel.Name = "PacksPanel";
+            this.PacksPanel.Size = new System.Drawing.Size(624, 248);
+            this.PacksPanel.TabIndex = 4;
             // 
             // Form1
             // 
@@ -197,7 +197,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(43)))), ((int)(((byte)(79)))), ((int)(((byte)(141)))));
             this.ClientSize = new System.Drawing.Size(884, 861);
-            this.Controls.Add(this.GamesPanel);
+            this.Controls.Add(this.PacksPanel);
             this.Controls.Add(this.AppsPanel);
             this.Controls.Add(this.TopPickPanel);
             this.Controls.Add(this.HeaderPanel);
@@ -226,7 +226,7 @@
         private TextBox textBox1;
         private Panel TopPickPanel;
         private Panel AppsPanel;
-        private Panel GamesPanel;
+        private Panel PacksPanel;
         private Button CloseButton;
         private ProgressBar downloadingProgressBar;
         private Panel panel1;

@@ -3,6 +3,7 @@ using Utility;
 using System.Net;
 using Newtonsoft.Json;
 using System.Diagnostics;
+using CustomStore.CustomControls;
 
 namespace CustomStore
 {
@@ -19,65 +20,36 @@ namespace CustomStore
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            int xPos = 0;
-            int yPos = 0;
-            using HttpClient client = new();
-            string s = client.GetStringAsync("http://127.0.0.1/SoftwareCenter/softwareList.json").Result;
-            JSONClassParser? myDeserializedClass = JsonConvert.DeserializeObject<JSONClassParser>(s);
+            Task.Run(() => InitializeSoftwaresInForm());
+        }
 
-            foreach (Software item in myDeserializedClass.Softwares)
-            {
-                Label installationStatusLabel = new()
+        public void InitializeSoftwaresInForm()
+        {
+            if (InvokeRequired) ///TODO: INVOKING PREVENTS LOADING AS ASYNC, HERE WILL BE CHANGED TO ASYNC
+                Invoke((Delegate)(() =>
                 {
-                    Text = CheckSoftwareIsInstalled.CheckIfSoftwareIsInstalled(item.Name) ? "Installed" : "Not Installed",
-                    Font = new Font("Segoe UI", 9),
-                    ForeColor = Color.White,
-                    Dock = DockStyle.Bottom,
-                    AutoSize = false,
-                    TextAlign = ContentAlignment.MiddleCenter
-                };
+                    int xPos = 0;
+                    int yPos = 0;
 
-                Panel panel = new()
-                {
-                    Size = new Size(150, 150),
-                    Padding = new Padding(20, 20, 20, 20),
-                    Location = new Point(xPos, yPos)
-                };
-                panel.MouseClick += ((e, d) => { StartDownload(item.FileURL, item.SilentCommand, installationStatusLabel); });
-                AppsPanel.Controls.Add(panel);
+                    foreach (Software item in JsonHelper.GetSoftwares())
+                    {
+                        SoftwareControl sc = new();
+                        sc.SetSpecs(item.Name, JsonHelper.CheckSoftwareIsInstalledByID(item.Id) ? "Installed" : "Not Installed", Task.Run<Image>(async () => await Utilities.GetBitmapFromURL(item.IconURL)).Result);
+                        sc.Location = new Point(xPos, yPos);
+                        AppsPanel.Controls.Add(sc);
+                        xPos += 150;
+                    }
 
-                xPos += 150;
-                //yPos += 150;
-
-                PictureBox pictureBox = new();
-                pictureBox.Dock = DockStyle.Top;
-                pictureBox.Size = new Size(60, 60);
-
-                var request = WebRequest.Create(item.IconURL);
-                using (var response = request.GetResponse())
-                using (var stream = response.GetResponseStream())
-                {
-                    pictureBox.BackgroundImage = Bitmap.FromStream(stream);
-                }
-                pictureBox.BackgroundImageLayout = ImageLayout.Zoom;
-                pictureBox.MouseClick += ((e, d) => { StartDownload(item.FileURL, item.SilentCommand, installationStatusLabel); });
-                panel.Controls.Add(pictureBox);
-
-                Label appName = new()
-                {
-                    Text = item.Name,
-                    Dock = DockStyle.Bottom,
-                    ForeColor = Color.White,
-                    Font = new Font("Segoe UI", 12),
-                    AutoSize = false,
-                    TextAlign = ContentAlignment.MiddleCenter
-                };
-                MouseClick += ((e, d) => { StartDownload(item.FileURL, item.SilentCommand, installationStatusLabel); });
-                panel.Controls.Add(appName);
-                panel.Controls.Add(installationStatusLabel);
-
-                panel.Refresh();
-            }
+                    xPos = 0;
+                    foreach (SoftwarePack sp in JsonHelper.GetSoftwarePacks())
+                    {
+                        SoftwarePackControl spc = new();
+                        spc.SetSpecs(sp.Name, sp.Softwares);
+                        spc.Location = new Point(xPos, yPos);
+                        PacksPanel.Controls.Add(spc);
+                        yPos += 150;
+                    }
+                }));
         }
 
         private void CloseButton_Click(object sender, EventArgs e)
@@ -85,12 +57,14 @@ namespace CustomStore
             Application.Exit();
         }
         
-        private void StartDownload(string? _url, string? _silentCommand, Label? _installationstatusLabel)
+        private void StartDownload(string _url, string _silentCommand, Label _installationstatusLabel)
         {
             itemSilenceCommand = _silentCommand;
             installationStatusLabel = _installationstatusLabel;
             Thread thread = new(() => {
+#pragma warning disable SYSLIB0014 // Type or member is obsolete
                 WebClient client = new();
+#pragma warning restore SYSLIB0014 // Type or member is obsolete
                 client.DownloadProgressChanged += new DownloadProgressChangedEventHandler(Client_DownloadProgressChanged);
                 client.DownloadFileCompleted += new AsyncCompletedEventHandler(Client_DownloadFileCompleted);
                 client.DownloadFileAsync(new Uri(_url), Environment.CurrentDirectory + "\\temp.exe");

@@ -23,33 +23,38 @@ namespace CustomStore
             Task.Run(() => InitializeSoftwaresInForm());
         }
 
-        public void InitializeSoftwaresInForm()
+        public async void InitializeSoftwaresInForm()
         {
-            if (InvokeRequired) ///TODO: INVOKING PREVENTS LOADING AS ASYNC, HERE WILL BE CHANGED TO ASYNC
-                Invoke((Delegate)(() =>
-                {
-                    int xPos = 0;
-                    int yPos = 0;
+            int xPos = 0;
+            int yPos = 0;
 
-                    foreach (Software item in JsonHelper.GetSoftwares())
+            foreach (Software item in JsonHelper.GetSoftwares())
+            {
+                SoftwareControl sc = new();
+                await sc.SetSpecs(item);
+
+                sc.Location = new Point(xPos, yPos);
+                if (InvokeRequired)
+                    Invoke((Delegate)(() =>
                     {
-                        SoftwareControl sc = new();
-                        sc.SetSpecs(item.Name, JsonHelper.CheckSoftwareIsInstalledByID(item.Id) ? "Installed" : "Not Installed", Task.Run<Image>(async () => await Utilities.GetBitmapFromURL(item.IconURL)).Result);
-                        sc.Location = new Point(xPos, yPos);
                         AppsPanel.Controls.Add(sc);
-                        xPos += 150;
-                    }
+                    }));
+                xPos += 150;
+            }
 
-                    xPos = 0;
-                    foreach (SoftwarePack sp in JsonHelper.GetSoftwarePacks())
+            xPos = 0;
+            foreach (SoftwarePack sp in JsonHelper.GetSoftwarePacks())
+            {
+                SoftwarePackControl spc = new();
+                spc.SetSpecs(sp.Name, sp.Softwares);
+                spc.Location = new Point(xPos, yPos);
+                if (InvokeRequired)
+                    Invoke((Delegate)(() =>
                     {
-                        SoftwarePackControl spc = new();
-                        spc.SetSpecs(sp.Name, sp.Softwares);
-                        spc.Location = new Point(xPos, yPos);
                         PacksPanel.Controls.Add(spc);
-                        yPos += 150;
-                    }
-                }));
+                    }));
+                yPos += 150;
+            }
         }
 
         private void CloseButton_Click(object sender, EventArgs e)

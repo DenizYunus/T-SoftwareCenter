@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using Utility;
 
 namespace CustomStore.CustomControls
 {
@@ -17,11 +9,12 @@ namespace CustomStore.CustomControls
             InitializeComponent();
         }
 
-        public void SetSpecs(string _appName, string _installationStatus, Image _pictureIcon)
+        public async Task SetSpecs(Software _software)
         {
-            appNameLabel.Text = _appName;
-            installStatusLabel.Text = _installationStatus;
-            pictureBox.BackgroundImage = _pictureIcon;
+            appNameLabel.Text = _software.Name;
+            installStatusLabel.Text = JsonHelper.CheckSoftwareIsInstalledByID(_software.Id) ? "Installed" : "Not Installed";
+            //pictureBox.BackgroundImage = Utilities.GetBitmapFromURL(_iconURL).Result;
+            pictureBox.BackgroundImage = Task.Run<Image>(async () => await Utilities.GetBitmapFromURL(_software.IconURL)).Result;
         }
     }
 }

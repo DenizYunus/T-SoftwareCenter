@@ -53,7 +53,7 @@ namespace CustomStore
                     {
                         PacksPanel.Controls.Add(spc);
                     }));
-                yPos += 150;
+                yPos += 120;
             }
         }
 

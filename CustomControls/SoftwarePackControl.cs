@@ -27,23 +27,33 @@ namespace CustomStore.CustomControls
                     {
                         Task<Image> getImageTask = new Task<Image>(() => Utilities.GetBitmapFromURL(JsonHelper.GetSoftwareByID(Convert.ToInt32(_softwareList[0]))!.IconURL).Result);
                         getImageTask.Start();
-                        getImageTask.Wait();
-                        //var gTask = getImageTask as Task<Image>;
                         pictureBox1.BackgroundImage = getImageTask.Result;
                     }
                         
 
                 if (_softwareList.Length > 1)
                     if (_softwareList[1] != null)
-                        pictureBox2.BackgroundImage = await Utilities.GetBitmapFromURL(JsonHelper.GetSoftwareByID(Convert.ToInt32(_softwareList[1]))!.IconURL);
+                    {
+                        Task<Image> getImageTask = new Task<Image>(() => Utilities.GetBitmapFromURL(JsonHelper.GetSoftwareByID(Convert.ToInt32(_softwareList[1]))!.IconURL).Result);
+                        getImageTask.Start();
+                        pictureBox2.BackgroundImage = getImageTask.Result;
+                    }
 
-                //if (_softwareList.Length > 2)
-                //    if (_softwareList[2] != null)
-                //        pictureBox3.BackgroundImage = Task.Run<Image>(async () => await Utilities.GetBitmapFromURL(JsonHelper.GetSoftwareByID(Convert.ToInt32(_softwareList[2]))!.IconURL)).Result;
+                if (_softwareList.Length > 2)
+                    if (_softwareList[2] != null)
+                    {
+                        Task<Image> getImageTask = new Task<Image>(() => Utilities.GetBitmapFromURL(JsonHelper.GetSoftwareByID(Convert.ToInt32(_softwareList[2]))!.IconURL).Result);
+                        getImageTask.Start();
+                        pictureBox3.BackgroundImage = getImageTask.Result;
+                    }
 
-                //if (_softwareList.Length > 3)
-                //    if (_softwareList[3] != null)
-                //        pictureBox4.BackgroundImage = Task.Run<Image>(async () => await Utilities.GetBitmapFromURL(JsonHelper.GetSoftwareByID(Convert.ToInt32(_softwareList[3]))!.IconURL)).Result;
+                if (_softwareList.Length > 3)
+                    if (_softwareList[3] != null)
+                    {
+                        Task<Image> getImageTask = new Task<Image>(() => Utilities.GetBitmapFromURL(JsonHelper.GetSoftwareByID(Convert.ToInt32(_softwareList[3]))!.IconURL).Result);
+                        getImageTask.Start();
+                        pictureBox4.BackgroundImage = getImageTask.Result;
+                    }
             }
         }
     }
